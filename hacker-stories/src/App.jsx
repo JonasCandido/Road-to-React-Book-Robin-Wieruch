@@ -16,7 +16,8 @@ const list = [{
 },
 ]
 
-const App = () => {(
+const App = () => {
+  return(
     <div>
       <h1>My Hacker Stories</h1>
       <Search />
@@ -27,11 +28,27 @@ const App = () => {(
     </div>
 )};
 
-const Search = () => {(
-    <div><label htmlFor="search">Search:</label><input id="search" type="text" /></div>
-)};
+const Search = () => {
+  const handleChange = (event) => {
+    console.log(event);
+    console.log(event.target.value)
+  };
 
-const List = () => {(
+  const handleBlur = (event) => {
+    console.log(event);
+    console.log(event.target.value)
+  }
+
+  return(
+    <div>
+      <label htmlFor="search">Search:</label>
+      <input id="search" type="text" onChange={handleChange} onBlur={handleBlur} />
+    </div>
+  );
+};
+
+const List = () => {
+  return(
     <ul>
       {list.map((item) => 
         (
