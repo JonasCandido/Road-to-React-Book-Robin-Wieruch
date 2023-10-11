@@ -2,7 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 const App = () => {
-  console.log('App renders')
   const stories = [{
     title: 'React',
     url: 'https://reactjs.org/',
@@ -20,25 +19,32 @@ const App = () => {
     objectID: 1,
   },
 ];
+  // A
+  const handleSearch = (event) => {
+  // D
+    console.log(event.target.value);
+  };
 
   return(
     <div>
       <h1>My Hacker Stories</h1>
-      <Search />
+      {/* //B */}
+      <Search onSearch={handleSearch} />
       <hr />
       <List list={stories} />
     </div>
-);
+  );
 };
 
-const Search = () => {
-  console.log('Search renders')
+const Search = (props) => {
   const [searchTerm, setSearchTerm] = React.useState('');
   console.log(searchTerm)
   
   const handleChange = (event) => {
     setSearchTerm(event.target.value);
-  };
+    //C
+    props.onSearch(event);
+  }
 
   const handleBlur = (event) => {
     console.log(event);
@@ -54,18 +60,17 @@ const Search = () => {
 };
 
 const List = (props) => {
-  console.log('List renders')
+
   return(
     <ul>
       {props.list.map((item) => (
           <Item key={item.objectID} item={item} />
         ))}
     </ul>
-);
+  );
 };
 
 const Item = (props) => {
-  console.log('Item renders')
   return (
     <li>
             <span>
@@ -80,6 +85,10 @@ const Item = (props) => {
 
 List.propTypes = {
   list: PropTypes.array.isRequired,
+};
+
+Search.propTypes = {
+  onSearch: PropTypes.func.isRequired,
 };
 
 Item.propTypes = {
