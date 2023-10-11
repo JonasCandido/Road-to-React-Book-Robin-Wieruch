@@ -19,33 +19,25 @@ const App = () => {
     objectID: 1,
   },
 ];
-  // A
+  const [searchTerm, setSearchTerm] = React.useState('');
+  console.log(searchTerm)
+
   const handleSearch = (event) => {
-  // D
-    console.log(event.target.value);
+    setSearchTerm(event.target.value);
   };
 
   return(
     <div>
       <h1>My Hacker Stories</h1>
-      {/* //B */}
       <Search onSearch={handleSearch} />
       <hr />
+      <p>Searching for {searchTerm}</p>
       <List list={stories} />
     </div>
   );
-};
+}; 
 
 const Search = (props) => {
-  const [searchTerm, setSearchTerm] = React.useState('');
-  console.log(searchTerm)
-  
-  const handleChange = (event) => {
-    setSearchTerm(event.target.value);
-    //C
-    props.onSearch(event);
-  }
-
   const handleBlur = (event) => {
     console.log(event);
     console.log(event.target.value);
@@ -54,13 +46,12 @@ const Search = (props) => {
   return(
     <div>
       <label htmlFor="search">Search:</label>
-      <input id="search" type="text" onChange={handleChange} onBlur={handleBlur} />
+      <input id="search" type="text" onBlur={handleBlur} onChange={props.onSearch} />
     </div>
   );
 };
 
 const List = (props) => {
-
   return(
     <ul>
       {props.list.map((item) => (
@@ -83,12 +74,12 @@ const Item = (props) => {
   );
 }
 
-List.propTypes = {
-  list: PropTypes.array.isRequired,
-};
-
 Search.propTypes = {
   onSearch: PropTypes.func.isRequired,
+};
+
+List.propTypes = {
+  list: PropTypes.array.isRequired,
 };
 
 Item.propTypes = {
