@@ -31,7 +31,7 @@ const App = () => {
   return(
     <div>
       <h1>My Hacker Stories</h1>
-      <Search onSearch={handleSearch} />
+      <Search search={searchTerm} onSearch={handleSearch} />
       <hr />
       <List list={searchedStories} />
     </div>
@@ -47,7 +47,7 @@ const Search = (props) => {
   return(
     <div>
       <label htmlFor="search">Search:</label>
-      <input id="search" type="text" onBlur={handleBlur} onChange={props.onSearch} />
+      <input id="search" type="text" value={props.search} onBlur={handleBlur} onChange={props.onSearch} />
     </div>
   );
 };
@@ -76,6 +76,7 @@ const Item = (props) => {
 }
 
 Search.propTypes = {
+  search: PropTypes.string.isRequired,
   onSearch: PropTypes.func.isRequired,
 };
 
