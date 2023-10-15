@@ -38,39 +38,38 @@ const App = () => {
   );
 }; 
 
-const Search = (props) => {
+const Search = ({search, onSearch}) => {
   const handleBlur = (event) => {
-    console.log(event);
     console.log(event.target.value);
   };
 
   return(
     <div>
       <label htmlFor="search">Search:</label>
-      <input id="search" type="text" value={props.search} onBlur={handleBlur} onChange={props.onSearch} />
+      <input id="search" type="text" value={search} onBlur={handleBlur} onChange={onSearch} />
     </div>
   );
 };
 
-const List = (props) => {
+const List = ({list}) => {
   return(
     <ul>
-      {props.list.map((item) => (
+      {list.map((item) => (
           <Item key={item.objectID} item={item} />
         ))}
     </ul>
   );
 };
 
-const Item = (props) => {
+const Item = ({item}) => {
   return (
     <li>
             <span>
-            <a href={props.item.url}>{props.item.title}</a>
+            <a href={item.url}>{item.title}</a>
             </span> <br />
-            Author: <span>{props.item.author}</span> <br />
-            Number of comments: <span>{props.item.num_comments}</span> <br />
-            Points: <span>{props.item.points}</span>
+            Author: <span>{item.author}</span> <br />
+            Number of comments: <span>{item.num_comments}</span> <br />
+            Points: <span>{item.points}</span>
     </li>
   );
 }
