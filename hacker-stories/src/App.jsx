@@ -54,25 +54,25 @@ const Search = ({search, onSearch}) => {
 const List = ({list}) => {
   return(
     <ul>
-      {list.map((item) => (
-          <Item key={item.objectID} item={item} />
+      {list.map((objectID, ...item) => (
+          <Item key={objectID} {...item} />
         ))}
     </ul>
   );
 };
 
-const Item = ({item}) => {
+const Item = ({title,url,author,num_comments,points}) => {
   return (
     <li>
-            <span>
-            <a href={item.url}>{item.title}</a>
-            </span> <br />
-            Author: <span>{item.author}</span> <br />
-            Number of comments: <span>{item.num_comments}</span> <br />
-            Points: <span>{item.points}</span>
+        <span>
+        <a href={url}>{title}</a>
+        </span> <br />
+        Author: <span>{author}</span> <br />
+        Number of comments: <span>{num_comments}</span> <br />
+        Points: <span>{points}</span>
     </li>
   );
-}
+};
 
 Search.propTypes = {
   search: PropTypes.string.isRequired,
@@ -84,7 +84,11 @@ List.propTypes = {
 };
 
 Item.propTypes = {
-  item: PropTypes.array.isRequired,
+  title: PropTypes.string.isRequired,
+  url: PropTypes.string.isRequired,
+  author: PropTypes.string.isRequired,
+  num_comments: PropTypes.number.isRequired,
+  points: PropTypes.number.isRequired,
 };
 
 export default App;
