@@ -39,24 +39,24 @@ const App = () => {
   );
 
   return(
-    <div>
+    <>
       <h1>My Hacker Stories</h1>
-      <Search search={searchTerm} onSearch={handleSearch} />
+      <InputWithLabel id="search" label="Search"  value={searchTerm} onInputChange={handleSearch} />
       <hr />
       <List list={searchedStories} />
-    </div>
+    </>
   );
 }; 
 
-const Search = ({search, onSearch}) => {
+const InputWithLabel = ({id, label, value, type='text',onInputChange}) => {
   const handleBlur = (event) => {
     console.log(event.target.value);
   };
 
   return(
     <>
-      <label htmlFor="search">Search:</label>
-      <input id="search" type="text" value={search} onBlur={handleBlur} onChange={onSearch} />
+      <label htmlFor={id}>{label}</label>&nbsp;
+      <input id={id} type={type} value={value} onBlur={handleBlur} onChange={onInputChange} />
     </>
   );
 };
@@ -84,9 +84,12 @@ const Item = ({item}) => {
   );
 };
 
-Search.propTypes = {
-  search: PropTypes.string.isRequired,
-  onSearch: PropTypes.func.isRequired,
+InputWithLabel.propTypes = {
+  id: PropTypes.string.isRequired,
+  label: PropTypes.string.isRequired,
+  value: PropTypes.string.isRequired,
+  type: PropTypes.string.isRequired,
+  onInputChange: PropTypes.func.isRequired,
 };
 
 List.propTypes = {
