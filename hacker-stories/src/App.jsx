@@ -1,6 +1,15 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
+const useStorageState = (key,initialState) => {
+  const [value, setValue] = React.useState(localStorage.getItem(key) || initialState);
+
+  React.useEffect(() => {
+    localStorage.setItem(key, value);
+  }, [value, key]);
+  return [value, setValue];
+}; 
+
 const App = () => {
   const stories = [{
     title: 'React',
@@ -20,13 +29,14 @@ const App = () => {
   },
 ];
 
-  const [searchTerm, setSearchTerm] = React.useState('React');
+  const [searchTerm, setSearchTerm] = useStorageState('search','React');
 
   const handleSearch = (event) => {
     setSearchTerm(event.target.value);
   };
 
-  const searchedStories = stories.filter(s => s.title.toLowerCase().includes(searchTerm.toLowerCase()));
+  const searchedStories = stories.filter(s => s.title.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   return(
     <div>
@@ -44,10 +54,10 @@ const Search = ({search, onSearch}) => {
   };
 
   return(
-    <div>
+    <>
       <label htmlFor="search">Search:</label>
       <input id="search" type="text" value={search} onBlur={handleBlur} onChange={onSearch} />
-    </div>
+    </>
   );
 };
 
