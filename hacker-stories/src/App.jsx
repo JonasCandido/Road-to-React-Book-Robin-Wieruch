@@ -19,6 +19,17 @@ const initialStories = [{
 },
 ];
 
+const getAsyncStories = () => new Promise((resolve) => 
+  setTimeout(() => resolve({data: {stories: initialStories}}),2000));
+
+const storiesReducer = (state,action) => {
+  if(action.type === 'SET_STORIES'){
+    return action.payload;
+  } else {
+    throw new Error();
+  }
+};
+
 const useStorageState = (key,initialState) => {
   const [value, setValue] = React.useState(localStorage.getItem(key) || initialState);
 
@@ -31,7 +42,32 @@ const useStorageState = (key,initialState) => {
 const App = () => {
   const [searchTerm, setSearchTerm] = useStorageState('search','React');
 
-  const[stories] = React.useState(initialStories);
+  const [stories, dispatchStories] = React.useReducer(storiesReducer,[]);
+
+  const[isLoading, setIsLoading] = React.useState(false);
+  
+  const[isError, setIsError] = React.useState(false);
+
+  React.useEffect(() => {
+    setIsLoading(true);
+    getAsyncStories().then(result => {
+      dispatchStories({
+        type: 'SET_STORIES',
+        payload: result.data.stories,
+      });
+      setIsLoading(false);
+    }).catch(() => setIsError(true));
+  },[]);
+
+  const handleRemoveStory = (item) => {
+    const newStories = stories.filter(
+      (story) => item.objectID !== story.objectID
+    );
+    dispatchStories({
+      type: 'SET_STORIES',
+      payload: newStories,
+    });
+  };
 
   const handleSearch = (event) => {
     setSearchTerm(event.target.value);
@@ -45,7 +81,10 @@ const App = () => {
       <h1>My Hacker Stories</h1>
       <InputWithLabel id="search" value={searchTerm} isFocused onInputChange={handleSearch}><strong>Search:</strong></InputWithLabel>
       <hr />
-      <List list={searchedStories} />
+      {isError && <p>Something went wrong...</p>}
+      {isLoading?(
+        <p>Loading...</p>
+      ):(<List list={searchedStories} onRemoveItem={handleRemoveStory} />)}
     </div>
   );
 }; 
@@ -76,17 +115,17 @@ const InputWithLabel = ({id,value, type='text',onInputChange,isFocused,children,
   );
 };
 
-const List = ({list}) => {
+const List = ({list, onRemoveItem}) => {
   return(
     <ul>
       {list.map((item) => (
-          <Item key={item.objectID} item={item} />
+          <Item key={item.objectID} item={item} onRemoveItem={onRemoveItem} />
         ))}
     </ul>
   );
 };
 
-const Item = ({item}) => {
+const Item = ({item, onRemoveItem}) => {
   return (
     <li>
         <span>
@@ -94,7 +133,8 @@ const Item = ({item}) => {
         </span> <br />
         Author: <span>{item.author}</span> <br />
         Number of comments: <span>{item.num_comments}</span> <br />
-        Points: <span>{item.points}</span>
+        Points: <span>{item.points}</span> <br />
+        <span><button type="button" onClick={() => onRemoveItem(item)}>Dismiss</button></span>
     </li>
   );
 };
@@ -110,10 +150,12 @@ InputWithLabel.propTypes = {
 
 List.propTypes = {
   list: PropTypes.array.isRequired,
+  onRemoveItem: PropTypes.func.isRequired,
 };
 
 Item.propTypes = {
   item: PropTypes.array.isRequired,
+  onRemoveItem: PropTypes.func.isRequired,
 };
 
 export default App;
