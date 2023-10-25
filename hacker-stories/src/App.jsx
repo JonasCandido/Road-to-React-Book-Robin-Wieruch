@@ -19,14 +19,22 @@ const initialStories = [{
 },
 ];
 
+const setStories = 'SET_STORIES';
+const removeStory = 'REMOVE_STORY'
+
 const getAsyncStories = () => new Promise((resolve) => 
   setTimeout(() => resolve({data: {stories: initialStories}}),2000));
 
 const storiesReducer = (state,action) => {
-  if(action.type === 'SET_STORIES'){
-    return action.payload;
-  } else {
-    throw new Error();
+  switch(action.type){
+    case setStories:
+      return action.payload;
+    case removeStory:
+      return state.filter(
+        (story) => action.payload.objectID !== story.objectID
+    );
+    default:
+      throw new Error();
   }
 };
 
@@ -52,7 +60,7 @@ const App = () => {
     setIsLoading(true);
     getAsyncStories().then(result => {
       dispatchStories({
-        type: 'SET_STORIES',
+        type: setStories,
         payload: result.data.stories,
       });
       setIsLoading(false);
@@ -60,12 +68,9 @@ const App = () => {
   },[]);
 
   const handleRemoveStory = (item) => {
-    const newStories = stories.filter(
-      (story) => item.objectID !== story.objectID
-    );
     dispatchStories({
-      type: 'SET_STORIES',
-      payload: newStories,
+      type: removeStory,
+      payload: item,
     });
   };
 
