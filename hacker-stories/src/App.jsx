@@ -47,14 +47,15 @@ const App = () => {
   const [stories, dispatchStories] = React.useReducer(storiesReducer,{data:[],isLoading:false,isError:false});
 
   React.useEffect(()=>{
+    if(!searchTerm) return;
     dispatchStories({type:storiesFecthInit});
-    fetch(`${API_ENDPOINT}react`)
+    fetch(`${API_ENDPOINT}${searchTerm}`)
     .then(response => response.json())
     .then(result => {
       dispatchStories({type:storiesFetchSuccess,payload:result.hits,
     });
     }).catch(() => dispatchStories({type:storiesFetchFailure}));
-  },[]);
+  },[searchTerm]);
 
   const handleRemoveStory = (item) => {
     dispatchStories({
@@ -67,8 +68,6 @@ const App = () => {
     setSearchTerm(event.target.value);
   };
 
-  const searchedStories = stories.data.filter(story => story.title.toLowerCase().includes(searchTerm.toLowerCase()));
-
   return(
     <div>
       <h1>My Hacker Stories</h1>
@@ -77,9 +76,9 @@ const App = () => {
       {stories.isError && <p>Something went wrong...</p>}
       {stories.isLoading?(
         <p>Loading...</p>
-      ):(<List list={searchedStories} onRemoveItem={handleRemoveStory}/>)}
+      ):(<List list={stories.data} onRemoveItem={handleRemoveStory}/>)}
     </div>
-  );
+  ); 
 }; 
 
 const InputWithLabel = ({id,value, type='text',onInputChange,isFocused,children,}) => {
