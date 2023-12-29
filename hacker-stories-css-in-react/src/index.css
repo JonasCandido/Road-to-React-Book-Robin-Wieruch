@@ -3,4 +3,6 @@ body{
     font-family: -apple-system,BlinkMacSystemFont,'Segoe UI','Roboto','Oxygen','Ubuntu','Cantarell','Fira Sans','Droid Sans','Helvetica Neue',sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    background: #83a4d4;
+    background: linear-gradient(to left,#b6fbff, #83a4d4);
 }
